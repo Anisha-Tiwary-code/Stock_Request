@@ -429,8 +429,8 @@ sap.ui.define([
                 var aFilters = [];
                 var mParameters = {};
 
-                //pass warehouse Number as filter (LGNUM)
-                aFilters.push(new sap.ui.model.Filter("LGNUM", sap.ui.model.FilterOperator.EQ, warehouseNumber.trim().toUpperCase()));
+                //pass warehouse Number as filter (Lgnum)
+                aFilters.push(new sap.ui.model.Filter("Lgnum", sap.ui.model.FilterOperator.EQ, warehouseNumber.trim().toUpperCase()));
 
                 //pass destination storage type as filter (LGTYP)
                 aFilters.push(new sap.ui.model.Filter("LGTYP", sap.ui.model.FilterOperator.EQ, destStorageType.trim().toUpperCase()));
