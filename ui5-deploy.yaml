@@ -1,0 +1,28 @@
+# yaml-language-server: $schema=https://sap.github.io/ui5-tooling/schema/ui5.yaml.json
+
+specVersion: "3.1"
+metadata:
+  name: com.reckitt.zpestockrequest
+type: application
+builder:
+  resources:
+    excludes:
+      - index.html
+      - /test/**
+      - /localService/**
+  customTasks:
+    - name: deploy-to-abap
+      afterTask: generateCachebusterInfo
+      configuration:
+        target:
+          destination: GDF
+          url: http://tazfridevpas.idc.rb.net:8000
+        app:
+          name: ZPE_STOCKREQ
+          description: PE Stock Request App
+          package: ZPE_FIORI
+          transport: GDFK900416 #GDFK900398 #GDFK900143
+        exclude:
+          - /test/
+          - /localService/
+          - index.html

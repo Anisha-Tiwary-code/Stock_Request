@@ -1,0 +1,319 @@
+<mvc:View controllerName="com.reckitt.zpestockrequest.controller.Main"
+    xmlns:mvc="sap.ui.core.mvc" displayBlock="true"
+    xmlns="sap.m"
+    xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form" xmlns:core="sap.ui.core">
+
+    <Shell id="shell">
+		<App>
+			<pages>
+                <Page id="page" title="{i18n>title}">
+                    <content>
+
+                        <f:SimpleForm id="idHeaderDataForm1" editable="true" class="sapUiSizeCompact" layout="ColumnLayout" columnsM="2" columnsL="3" columnsXL="3">
+                        <!-- layout="ResponsiveGridLayout" title="{i18n>lblStockRequestType}" labelSpanXL="3" labelSpanL="3" labelSpanM="3" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="4" emptySpanL="4" emptySpanM="4" emptySpanS="0" columnsXL="4" columnsL="4" columnsM="4" singleContainerFullSize="false"> -->
+                            <f:content>
+                                <Label id="idLblStockReqType" labelFor="idStockReqType" text="{i18n>lblStockRequestType}" width="100%" />
+                                <RadioButtonGroup xmlns="sap.m" id="idStockReqType" columns="2"  selectedIndex="-1"
+                                    select=".onSelectStockRequestType">
+                                <buttons>
+                                    <RadioButton id="radioBtnReqForOrder" text="{i18n>RequestforOrder}" />
+                                    <RadioButton id="radioBtnManualRequest" text="{i18n>ManualRequest}"/>
+                                </buttons>
+                                </RadioButtonGroup>
+                                <Label id="idLblPlant" text="{i18n>lblPlant}" visible="true"
+                                                    labelFor="idPlantInput" required="true" />
+                                <Input id="idPlantInput" enabled="true" showValueHelp="true" valueHelpRequest=".onVHPlant" 
+                                                value="{locHeaderModel>/plant}" valueState="{valueStateModel>/plantValState}" visible="true"
+                                                change="clearItemsTable" liveChange= "clearItemsTable" submit="clearItemsTable" />
+
+                                <Label id="idLblWarehouse" text="{i18n>lblWarehouseNumber}" visible="true"
+                                                    labelFor="idWarehouseInput" required="true" />
+                                <Input id="idWarehouseInput" enabled="true" showValueHelp="true" valueHelpRequest=".onVHWarehouseNumber" 
+                                                value="{locHeaderModel>/warehouseNumber}" valueState="{valueStateModel>/warehouseValState}" visible="true"
+                                                change="clearItemsTable" liveChange= "clearItemsTable" submit="clearItemsTable" />
+
+                                                
+                                
+                            </f:content>
+                        </f:SimpleForm>
+
+                        <f:SimpleForm id="idHeaderDataForm2" editable="true" class="sapUiSizeCompact" layout="ColumnLayout" columnsM="2" columnsL="3" columnsXL="3"> 
+                                      <!-- layout="ResponsiveGridLayout" title="{i18n>lblStockRequestType}" labelSpanXL="3" labelSpanL="3" labelSpanM="3" labelSpanS="3" adjustLabelSpan="false" emptySpanXL="0" emptySpanL="0" emptySpanM="0" emptySpanS="0"  singleContainerFullSize="false"> -->
+
+                            <f:content>
+                                
+                                <Label id="idLblPlannedDtTime" labelFor="planned" text="{i18n>lblPlannedDateTime}" required="true" />
+                                <DateTimePicker id="planned" required="true" placeholder="{i18n>datePickerText}" 
+                                              change=".onChangeDateTime" valueState="{valueStateModel>/dateTimeValState}" 
+                                              value="{locHeaderModel>/plDateTime}" />
+
+                                              <!-- dateValue="{locHeaderModel>/dateValue}"/> -->
+
+                                <!-- <DatePicker id="idPlannedDate" required="true"  
+                                              change=".onChangeDateTime" value="{locHeaderModel>/plDateTime}" valueState="{valueStateModel>/dateTimeValState}" 
+                                              /> -->
+                                
+                                <Label id="idLblOrder" text="{i18n>lblOrder}" visible="{locHeaderModel>/reqForOrderFields}"
+                                                    labelFor="idOrderInput" />
+                                <Input id="idOrderInput" enabled="true" showValueHelp="false"  
+                                                value="{locHeaderModel>/orderNumber}" visible="{locHeaderModel>/reqForOrderFields}" liveChange=".onChangeOrderNumber" submit=".onChangeOrderNumber"
+                                                change=".onChangeOrderNumber" valueState="{valueStateModel>/workOrdValState}"/>
+
+                                <Label id="idLblTransferPriority" labelFor="idCBTransferPriority" text="{i18n>lblTransferPriority}"/>
+                                <ComboBox id="idCBTransferPriority" enabled="true" selectedKey="{locHeaderModel>/transferPriority}" change="onMovementTypeSelect">
+										<core:Item key="1" text="1"/>
+										<core:Item key="2" text="2"/>
+										<core:Item key="3" text="3"/>
+								</ComboBox>
+                                <Label id="lblMovementType" labelFor="idMovementType" text="{i18n>lblMovementType}" required="true" />
+                                <!-- <ComboBox id="idCBMovementType" enabled="true" selectedKey="{locHeaderModel>/movementType}" change="onMovementTypeSelect" required="true">
+										<core:Item key="319" text="319"/>
+										<core:Item key="912" text="912"/>
+										
+								</ComboBox> -->
+                                <Input id="idMovementType" enabled="true" showValueHelp="true" valueHelpRequest=".onVHMovementType" valueHelpOnly="true"
+                                                value="{locHeaderModel>/movementType}" valueState="{valueStateModel>/movementTypeValState}" visible="true"/>
+
+                                <Label id="idLblReqtNumber" text="{i18n>lblReqtNumber}" visible="true"
+                                                    labelFor="idReqtNumber"/>
+                                <Input id="idReqtNumber" editable="false"  showValueHelp="false"  
+                                                value="{locHeaderModel>/requirementNumber}" valueState="{valueStateModel>/ReqtNumberValState}" visible="true"/>
+
+                                <Label id="idLblStorageLoc" text="{i18n>lblStorageLoc}" visible="true"
+                                                    labelFor="idReqtDescInput"/>
+                                <Input id="idStorageLocInput" enabled="true" showValueHelp="false" required="true" 
+                                       valueState = "{valueStateModel>/storageLocValState}"   value="{locHeaderModel>/storageLoc}" visible="true"
+                                       change="clearItemsTable" liveChange= "clearItemsTable" submit="clearItemsTable"/>
+
+                                <!-- Requirement Description - auto populate order number for Request for Order-->
+                                <Label id="idLblReqtDesc" text="{i18n>lblReqtDesc}" visible="true"
+                                                    labelFor="idReqtDescInput" required="true" />
+                                <Input id="idReqtDescInput" enabled="true" showValueHelp="false"  maxLength="10"
+                                                value="{locHeaderModel>/requirementDesc}" valueState="{valueStateModel>/ReqtDescValState}" editable="{locHeaderModel>/reqtDescEnabled}" visible="true"/>
+
+                                
+                            </f:content>
+                        </f:SimpleForm>
+
+
+                        <f:SimpleForm id="idHeaderDataForm3" class="sapUiSizeCompact" editable="true" layout="ColumnLayout" columnsM="2" columnsL="3" columnsXL="3">
+                            <f:content>
+
+                                <Label id="idLblRequestQty" labelFor="idStockReqType" text="{i18n>lblSelect}" width="100%" visible = "{locHeaderModel>/reqForOrderFields}" />
+                                <RadioButtonGroup xmlns="sap.m" id="idReqQty" columns="2"  selectedIndex="0"
+                                    select=".onSelectQtyRequestType" visible="{locHeaderModel>/reqForOrderFields}" >
+                                <buttons>
+                                    <RadioButton id="radioBtnReqRemaining" text="{i18n>lblReqRemaining}" />
+                                    <RadioButton id="radioBtnReqTargetQty" text="{i18n>lblReqTargetQty}"/>
+                                </buttons>
+                                </RadioButtonGroup>
+
+                                <Label id="idLblTargetQty" text="{i18n>lblTargetQty}" visible="{locHeaderModel>/targetQtyFields}"
+                                                    labelFor="idTargetQty"/>
+                                <Input id="idTargetQty" enabled="true" visible="{locHeaderModel>/targetQtyFields}" value="{locHeaderModel>/targetQty}"
+                                        maxLength="8" change="clearItemsTable"/>
+                                        
+                                <Label id="idLblTargetUnit" text="{i18n>lblTargetUoM}" 
+                                                    labelFor="idTargetUnit" visible="{locHeaderModel>/targetQtyFields}"/>
+                                <Input id="idTargetUnit" enabled="true" showValueHelp="false"  editable="false"
+                                                visible="{locHeaderModel>/targetQtyFields}" value="{locHeaderModel>/targetUoM}"/>
+
+                                <Label id="idLblDestStorageType" text="{i18n>lblDestStorageType}" visible="{locHeaderModel>/manualRequestFields}"
+                                                    labelFor="idDestStorageTypeInput" required="true"/>
+
+                                <!-- 01-04-2024 Value help for Dest Storage Type - Backlog item -->
+                                <!-- showValueHelp="true" valueHelpOnly="false" valueHelpRequest=".onVHDestStorageType" -->
+                                <Input id="idDestStorageTypeInput" enabled="true" showValueHelp="true" valueHelpOnly="false" valueHelpRequest=".onVHDestStorageType"   
+                                                value="{locHeaderModel>/destStorageType}" valueState="{valueStateModel>/storageTypeValState}"
+                                                visible="{locHeaderModel>/manualRequestFields}"  change="clearItemsTable" liveChange= "clearItemsTable" submit="clearItemsTable"/>
+
+                                
+
+                                <Label id="idLblDestStorageBin" text="{i18n>lblDestStorageBin}" visible="{locHeaderModel>/manualRequestFields}"
+                                                    labelFor="idDestStorageBinInput" required="true" />
+                                <Input id="idDestStorageBinInput" enabled="true" showValueHelp="true"  
+                                                value="{locHeaderModel>/destStorageBin}" valueState="{valueStateModel>/storageBinValState}"
+                                                visible="{locHeaderModel>/manualRequestFields}"  change="clearItemsTable" liveChange= "clearItemsTable" submit="clearItemsTable"/>
+                           
+                                
+                                
+                            </f:content>
+                        </f:SimpleForm>
+
+                        <Toolbar >
+                            <ToolbarSpacer/>
+                            <Button text="{i18n>btnGo}" type="Emphasized" enabled="true" press="onPressGo"
+                                    visible="{locHeaderModel>/reqForOrderFields}"/>
+                        </Toolbar>
+
+                        <!-- Request for Order PickParts table -->
+
+                        <Table id="idPickPartsTable" visible="{locHeaderModel>/reqForOrderFields}"  items="{path: 'goodsItemJSONModel>/', templateShareable: true}" noDataText="{i18n>noData}" alternateRowColors="true">
+							<headerToolbar>
+									<OverflowToolbar>
+										<content>
+											<Title text="{i18n>titleItemDetails}" level="H2"/>
+											<ToolbarSpacer/>
+											
+										</content>
+									</OverflowToolbar>
+								
+							</headerToolbar>
+							<columns>
+								<Column minScreenWidth="Tablet" popinDisplay="Inline" demandPopin="true">
+									<Label text="{i18n>lblMaterial}" />
+								</Column>
+
+								<Column minScreenWidth="Tablet" popinDisplay="Inline" demandPopin="true">
+									<Label text="{i18n>lblMaterialDescription}" wrapping="true"/>
+								</Column>
+
+								<Column minScreenWidth="Tablet" popinDisplay="Inline" demandPopin="true">
+									<Label text="{i18n>lblRequirmentQty}" />
+								</Column>
+
+								<Column minScreenWidth="Tablet" popinDisplay="Inline" demandPopin="true">
+									<Label text="{i18n>lblRequestedQty}" />
+								</Column>
+
+                                <Column minScreenWidth="Tablet" popinDisplay="Inline" demandPopin="true">
+									<Label text="{i18n>lblAlreadyRequested}" />
+								</Column>
+
+                                <Column minScreenWidth="Tablet" popinDisplay="Inline" demandPopin="true">
+									<Label text="{i18n>lblUoM}" />
+								</Column>
+
+                            </columns>
+							<items>
+								<ColumnListItem type="Active" press="onGoodsItemSelected">
+									<cells>
+
+                                        <!-- Material number -->
+										<Text text ="{goodsItemJSONModel>Matnr}"/> 
+
+                                        <!-- <Material description -->
+										<Text text ="{goodsItemJSONModel>Matxt}"/>
+
+                                        <!-- Requirement Qty -->
+										<Text text="{goodsItemJSONModel>Bdmng}" />
+
+                                        <!-- Requested Qty -->
+										<!-- <Input type="Number" -->
+                                        <!-- Commented Input type as Number so as to show requested Quantity in user's decimal notaiton - defect fix 26-03-2024 -->
+                                            <Input value="{goodsItemJSONModel>Ofmng}" editable = "true" change="onValidation"/>
+
+                                        <!-- Already Requested -->
+                                        <Text text="{goodsItemJSONModel>Tbmng}"/>
+
+                                        <!-- UoM -->
+                                        <Text text="{goodsItemJSONModel>Meins}"/>
+
+                                    </cells>
+								</ColumnListItem>
+							</items>
+						</Table>
+
+                        <!-- Manual Request Items Table 
+                        mode="SingleSelectLeft" -->
+
+                        <Table id="idGoodsItemTable" mode="SingleSelectLeft" itemPress="onSelectItem"  class="sapUiSizeCompact" visible="{locHeaderModel>/manualRequestFields}" items="{path: 'goodsItemJSONModel>/', templateShareable: true}" noDataText="{i18n>noData}" 
+                                alternateRowColors="true" backgroundDesign="Transparent">
+                            <headerToolbar>
+                                <OverflowToolbar>
+                                    <content>
+                                        <Title text="{i18n>titleItemDetails}" level="H2"/>
+                                        
+                                        <ToolbarSpacer/>
+
+                                        <Button icon="sap-icon://add" press=".onAddGoodsItem"  type="Emphasized" visible= "{locHeaderModel>/manualRequestFields}"/>
+                                        <!-- <Button icon="sap-icon://delete" press="ondeleteGoodsItemRow" type="Emphasized" visible= "{locHeaderModel>/manualRequestFields}"/> -->
+                                    </content>
+                                </OverflowToolbar>
+                            </headerToolbar>
+                            <columns>
+
+                                
+
+                                <Column>
+                                    <Label text="{i18n>lblMaterial}" />
+                                </Column>
+
+                                <Column minScreenWidth="Tablet" popinDisplay="Inline" demandPopin="true">
+                                    <Label text="{i18n>lblTRQuantity}" wrapping="true"/>
+                                </Column>
+
+                                <Column minScreenWidth="Tablet" popinDisplay="Inline" demandPopin="true">
+                                    <Label text="{i18n>lblUoM}" />
+                                </Column>
+
+                                <Column minScreenWidth="Tablet" popinDisplay="Inline" demandPopin="true">
+                                    <Label text="{i18n>lblBatch}" />
+                                </Column>
+
+                                <Column>
+                                    <Label text="{i18n>lblDeleteAction}"/>
+                                </Column> 
+
+                                <Column>
+                                    <Label text="{i18n>lblEditAction}"/>
+                                </Column> 
+
+                            </columns>
+                            <items>
+                                <ColumnListItem type="Active" press="onGoodsItemSelected">
+                                    <cells>
+
+                                        <!-- <CheckBox id="idSelectRow" ></CheckBox> -->
+                                        <!-- Material number -->
+                                        <Input editable="false" value ="{goodsItemJSONModel>Matnr}"/>
+
+                                        <!-- <Input id= "idQuantityInput" editable="false" value ="{goodsItemJSONModel>Menge}"/> -->
+                                        <!-- TR Qty -->
+                                        <Input editable="false" value ="{goodsItemJSONModel>Menga}"/>
+
+                                        <!-- <Input id ="idUoMInput" editable="false" value="{goodsItemJSONModel>Einheit}" /> -->
+                                        <!-- <Input id="idBatchInput" editable="false" value="{goodsItemJSONModel>Batch}"/> -->
+
+                                        <!-- Alternate UoM -->
+                                        <Input editable="false" value="{goodsItemJSONModel>Altme}" />
+
+                                        <!-- Batch -->
+                                        <Input editable="false" value="{goodsItemJSONModel>Charg}"/>
+
+                                        <Button press="onDeleteEvent" type="Default" visible= "true" text="{i18n>btnDelete}"/>
+                                                <!-- enabled="{goodsItemJSONModel>Delete}" /> -->
+
+                                                <!-- icon="sap-icon://delete" icon="sap-icon://edit" -->
+
+                                        <Button  press="onEditEvent" type="Default" visible= "true" text="{i18n>btnEdit}"/>
+                                                <!-- enabled="{goodsItemJSONModel>Edit}" /> -->
+
+                                        
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+
+                        <OverflowToolbar visible = "{locHeaderModel>/manualRequestFields}">
+                                     
+					        
+                            <!-- <Button icon="sap-icon://edit" press="EditRow"/> -->
+
+                        </OverflowToolbar>
+                    </content>
+
+                    <footer>
+						<OverflowToolbar>
+							
+							<ToolbarSpacer/>
+							<Button text="{i18n>btnCreateTR}" type="Emphasized" enabled="true" press="onCreateTR"/>
+							
+						</OverflowToolbar>
+					</footer>
+
+                </Page>
+             </pages>
+        </App>
+    </Shell>
+</mvc:View>

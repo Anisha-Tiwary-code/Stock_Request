@@ -1,0 +1,33 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form">
+	<Dialog afterClose="onAfterDialogClose"
+		title="{i18n>fragTitleAddItem}" contentWidth="70%">
+		<content>
+
+            <f:SimpleForm id="idAddMaterialsForm" class="sapUiSizeCompact" 
+                editable="true" layout="ColumnLayout" columnsXL="4" columnsL="2" columnsM="2">
+				<f:content>
+                    <Label text="{i18n>lblMaterial}" labelFor="idFragMaterialInput"/>
+                    <Input id = "idFragMaterialInput" value ="{locGoodsItemModel>/Matnr}" valueState="{valueStateModel>/fragMatValState}"
+                            submit=".onChangeMaterialNumber" change=".onChangeMaterialNumber"/>
+
+                    <Label text="{i18n>lblTRQuantity}" labelFor = "idFragQuantityInput" wrapping="true"/>
+                    <Input id= "idFragQuantityInput" value ="{locGoodsItemModel>/Menga}" valueState="{valueStateModel>/fragQuanValState}" change="onValidation"/>
+
+                    <Label text="{i18n>lblUoM}" labelFor="idFragUoMInput" />
+                    <Input id ="idFragUoMInput" value="{locGoodsItemModel>/Altme}" editable = "true" valueState="{valueStateModel>/fragUoMValState}"/>
+
+                    <Label text="{i18n>lblBatch}" labelFor="idFragBatchInput"/>
+                    <Input id="idFragBatchInput" value="{locGoodsItemModel>/Charg}"/>
+
+                </f:content>
+            </f:SimpleForm>
+			
+		</content>
+		<buttons>
+			<Button text="{i18n>btnAdd}" type="Emphasized" press="onAddMaterialsToTable" visible="{=${locGoodsItemModel>/Draft} === false?true:false}"/>
+            
+            <Button text="{i18n>btnUpdate}" type="Emphasized" press="updateGoodsItem" visible="{=${locGoodsItemModel>/Draft} === false?false:true}"/>
+			<Button text="{i18n>btnClose}" type="Emphasized" press="onAddMaterialsItemDialogClose"/>
+		</buttons>
+	</Dialog>
+</core:FragmentDefinition>
