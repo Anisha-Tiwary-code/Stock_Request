@@ -427,18 +427,23 @@ sap.ui.define([
                     return;
                 }
 
+                var aFilters = [];
                 var mParameters = {};
 
-                //pass warehouse Number and storage type as combined filter string
-                var filterString = "Lgnum eq '" + warehouseNumber.trim().toUpperCase() + "' and LGTYP eq '" + destStorageType.trim().toUpperCase() + "'";
-                mParameters.filters = filterString;
+                //pass warehouse Number as filter (Lgnum)
+                aFilters.push(new sap.ui.model.Filter("Lgnum", sap.ui.model.FilterOperator.EQ, warehouseNumber.trim().toUpperCase()));
+
+                //pass destination storage type as filter (LGTYP)
+                aFilters.push(new sap.ui.model.Filter("LGTYP", sap.ui.model.FilterOperator.EQ, destStorageType.trim().toUpperCase()));
+
+                mParameters.filters = aFilters;
 
                 var oModel = this.f4Model;
                 oModel.setUseBatch(false);
 
                 oModel.read("/StorageBinSHSet", {
                     filters: mParameters.filters,
-                    sorters: mParameters.sorters || "",
+                    sorters: mParameters.sorters,
                     success: $.proxy(function (oRetrievedResult) {
                         console.log("StorageBinSHSet success:", oRetrievedResult);
                         sap.ui.core.BusyIndicator.hide();
