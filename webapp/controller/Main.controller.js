@@ -409,6 +409,7 @@ sap.ui.define([
             //Implemented to load data from ZOD_PE_SEARCHHELPS_SRV/StorageBinSHSet
 
             onVHDestStorageBin: function (oEvent) {
+                console.log("onVHDestStorageBin called");
                 var control = oEvent.getSource();
 
                 this.clearValueStates();
@@ -426,24 +427,20 @@ sap.ui.define([
                     return;
                 }
 
-                var aFilters = [];
                 var mParameters = {};
 
-                //pass warehouse Number as filter (Lgnum) - as string
-                aFilters.push("Lgnum eq '" + warehouseNumber.trim().toUpperCase() + "'");
-
-                //pass destination storage type as filter (LGTYP) - as string
-                aFilters.push("LGTYP eq '" + destStorageType.trim().toUpperCase() + "'");
-
-                mParameters.filters = aFilters;
+                //pass warehouse Number and storage type as combined filter string
+                var filterString = "Lgnum eq '" + warehouseNumber.trim().toUpperCase() + "' and LGTYP eq '" + destStorageType.trim().toUpperCase() + "'";
+                mParameters.filters = filterString;
 
                 var oModel = this.f4Model;
                 oModel.setUseBatch(false);
 
                 oModel.read("/StorageBinSHSet", {
                     filters: mParameters.filters,
-                    sorters: mParameters.sorters,
+                    sorters: mParameters.sorters || "",
                     success: $.proxy(function (oRetrievedResult) {
+                        console.log("StorageBinSHSet success:", oRetrievedResult);
                         sap.ui.core.BusyIndicator.hide();
                         this.fnFormatEntitySet(oRetrievedResult.results, "/StorageBinSHSet", "/StorageBin");
                         this.loadStorageBinValueHelp(control);
