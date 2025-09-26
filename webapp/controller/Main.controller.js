@@ -416,31 +416,33 @@ sap.ui.define([
                 var locHeaderModel = this.getOwnerComponent().getModel("locHeaderModel");
                 var headerData = locHeaderModel.getData();
 
-                var aFilters = [];
-                var mParameters = {};
                 var warehouseNumber = headerData.warehouseNumber;
                 var destStorageType = headerData.destStorageType;
 
-                //pass warehouse Number as filter
-                if (warehouseNumber) {
-                    aFilters.push(new sap.ui.model.Filter("LGNUM", sap.ui.model.FilterOperator.EQ, warehouseNumber.trim().toUpperCase()));
+                //Validate that both warehouse number and storage type are present
+                if (!warehouseNumber || warehouseNumber.trim().length === 0 || 
+                    !destStorageType || destStorageType.trim().length === 0) {
+                    MessageBox.error("Please fill the Warehouse no. and Storage Type");
+                    return;
                 }
 
-                //pass destination storage type as filter
-                if (destStorageType) {
-                    aFilters.push(new sap.ui.model.Filter("LGTYP", sap.ui.model.FilterOperator.EQ, destStorageType.trim().toUpperCase()));
-                }
+                var aFilters = [];
+                var mParameters = {};
 
-                if (aFilters.length > 0) {
-                    mParameters.filters = aFilters;
-                }
+                //pass warehouse Number as filter (LGNUM)
+                aFilters.push(new sap.ui.model.Filter("LGNUM", sap.ui.model.FilterOperator.EQ, warehouseNumber.trim().toUpperCase()));
+
+                //pass destination storage type as filter (LGTYP)
+                aFilters.push(new sap.ui.model.Filter("LGTYP", sap.ui.model.FilterOperator.EQ, destStorageType.trim().toUpperCase()));
+
+                mParameters.filters = aFilters;
 
                 var oModel = this.f4Model;
                 oModel.setUseBatch(false);
 
                 oModel.read("/StorageBinSHSet", {
-                    filters: mParameters ? mParameters.filters : "",
-                    sorters: !mParameters ? mParameters.sorters : "",
+                    filters: mParameters.filters,
+                    sorters: mParameters.sorters,
                     success: $.proxy(function (oRetrievedResult) {
                         sap.ui.core.BusyIndicator.hide();
                         this.fnFormatEntitySet(oRetrievedResult.results, "/StorageBinSHSet", "/StorageBin");
