@@ -154,6 +154,20 @@ sap.ui.define([
 						"label": "{i18n>lblDescription}",
 						"template": "Storage Bin"
 					}]
+				},
+
+				//For Valuehelp of Destination Storage Bin
+				"storageBin":{
+					"cols":[{
+						"label": "{i18n>lblStorageType}",
+						"template": "Storage Type"
+					}, {
+						"label": "{i18n>lblStorageBin}",
+						"template": "Storage Bin"
+					}, {
+						"label": "{i18n>lblPutawayBlock}",
+						"template": "Putaway Block"
+					}]
 				}
 			};
 			oColModel.setData(colItem);
@@ -171,7 +185,8 @@ sap.ui.define([
 				"Plant": [],
 				"WarehouseNumber": [],
 				"MovementType": [],
-				"DestStorageType":[]//01-04-2024 - For Destination Storage Type value help
+				"DestStorageType":[],//01-04-2024 - For Destination Storage Type value help
+				"StorageBin":[]//For Destination Storage Bin value help
 				
 			};
 			oVHModel.setData(vhItem);

@@ -405,6 +405,95 @@ sap.ui.define([
 
             },
 
+            //Method called on F4 Value Help for Destination Storage Bin field
+            //Implemented to load data from ZOD_PE_SEARCHHELPS_SRV/StorageBinSHSet
+
+            onVHDestStorageBin: function (oEvent) {
+                var control = oEvent.getSource();
+
+                this.clearValueStates();
+
+                var locHeaderModel = this.getOwnerComponent().getModel("locHeaderModel");
+                var headerData = locHeaderModel.getData();
+
+                var aFilters = [];
+                var mParameters = {};
+                var warehouseNumber = headerData.warehouseNumber;
+                var destStorageType = headerData.destStorageType;
+
+                //pass warehouse Number as filter
+                if (warehouseNumber) {
+                    aFilters.push(new sap.ui.model.Filter("LGNUM", sap.ui.model.FilterOperator.EQ, warehouseNumber.trim().toUpperCase()));
+                }
+
+                //pass destination storage type as filter
+                if (destStorageType) {
+                    aFilters.push(new sap.ui.model.Filter("LGTYP", sap.ui.model.FilterOperator.EQ, destStorageType.trim().toUpperCase()));
+                }
+
+                if (aFilters.length > 0) {
+                    mParameters.filters = aFilters;
+                }
+
+                var oModel = this.f4Model;
+                oModel.setUseBatch(false);
+
+                oModel.read("/StorageBinSHSet", {
+                    filters: mParameters ? mParameters.filters : "",
+                    sorters: !mParameters ? mParameters.sorters : "",
+                    success: $.proxy(function (oRetrievedResult) {
+                        sap.ui.core.BusyIndicator.hide();
+                        this.fnFormatEntitySet(oRetrievedResult.results, "/StorageBinSHSet", "/StorageBin");
+                        this.loadStorageBinValueHelp(control);
+
+                    }, this),
+                    error: $.proxy(function (oError) {
+                        sap.ui.core.BusyIndicator.hide();
+
+                        if (oError.responseText) {
+                            var response = JSON.parse(oError.responseText);
+                            var errorList = response.error.innererror.errordetails;
+                            var errorMsgs = [];
+                            var ERROR = "";
+                            if (errorList) {
+                                for (var i = 0; i < errorList.length; i++) {
+                                    errorMsgs.push(errorList[i].message);
+                                    ERROR = ERROR + errorList[i].message + "\n";
+                                }
+                            }
+                            MessageBox.error(ERROR);
+                        }
+
+                    }, this)
+
+                })
+
+            },
+
+            loadStorageBinValueHelp: function (control) {
+                this.getOwnerComponent().getModel("VHKeyModel").setProperty("/Title", oRes.getText("lblDestStorageBin"));
+
+                //Key and value property texts are set from BaseController createColumnModel "cols" for storageBin
+                this.getOwnerComponent().getModel("VHKeyModel").setProperty("/key", "Storage Bin");
+                this.getOwnerComponent().getModel("VHKeyModel").setProperty("/descriptionKey", "Storage Type");
+                var columns = this.getOwnerComponent().getModel("ColumnModel").getObject("/storageBin");//Defined in createColumnModel method in models.js
+                var data = this.getOwnerComponent().getModel("CommonValueHelpModel").getObject("/StorageBin");
+                var entityset = "StorageBin";
+                this.fnValueHelpDialog(control, entityset, columns, data);
+
+            },
+
+            //Method to set Destination storage Bin after user chooses from value help
+            onSubmitDestStorageBin: function (storageBin) {
+                var locHeaderModel = this.getOwnerComponent().getModel("locHeaderModel");
+                var headerData = locHeaderModel.getData();
+
+                headerData.destStorageBin = storageBin;
+
+                locHeaderModel.refresh();
+
+            },
+
             //Method called when user enters order number for Request for Order Stock type
             onChangeOrderNumber: function () {
                 var headerData = this.getView().getModel("locHeaderModel").getData();

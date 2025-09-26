@@ -131,7 +131,7 @@
 
                                 <Label id="idLblDestStorageBin" text="{i18n>lblDestStorageBin}" visible="{locHeaderModel>/manualRequestFields}"
                                                     labelFor="idDestStorageBinInput" required="true" />
-                                <Input id="idDestStorageBinInput" enabled="true" showValueHelp="true"  
+                                <Input id="idDestStorageBinInput" enabled="true" showValueHelp="true" valueHelpRequest=".onVHDestStorageBin"  
                                                 value="{locHeaderModel>/destStorageBin}" valueState="{valueStateModel>/storageBinValState}"
                                                 visible="{locHeaderModel>/manualRequestFields}"  change="clearItemsTable" liveChange= "clearItemsTable" submit="clearItemsTable"/>
                            

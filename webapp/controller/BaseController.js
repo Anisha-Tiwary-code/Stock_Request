@@ -136,6 +136,11 @@ sap.ui.define([
 				this.onSubmitDestStorageType(aTokens[0].getText());
 			}
 
+			//if user chooses storage bin from value help, this method is called
+			if (oEvent.getSource().getKey() === "Storage Bin") {
+				this.onSubmitDestStorageBin(aTokens[0].getKey());
+			}
+
 			this._oValueHelpDialog.close();
 		},
 		/*	Method: onValueHelpCancelPress
@@ -267,6 +272,21 @@ sap.ui.define([
 				CommonValueHelpModel.setProperty(sColumnSet, destStorageTypes);
 				CommonValueHelpModel.refresh();	
 			  	break;
+
+			// Destination Storage Bin value help
+			case "/StorageBinSHSet":
+				var storageBins = [];
+				oDataResult.forEach(function (obj) {
+					var nItem = {
+						"Storage Type": obj.LGTYP,
+						"Storage Bin": obj.LGPLA,
+						"Putaway Block": obj.SKZUE
+					};
+					storageBins.push(nItem);
+				});
+				CommonValueHelpModel.setProperty(sColumnSet, storageBins);
+				CommonValueHelpModel.refresh();
+				break;
 
            	case "/PlantSHSet":
                var plantData = [];
