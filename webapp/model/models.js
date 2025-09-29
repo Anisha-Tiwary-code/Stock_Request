@@ -152,7 +152,7 @@ sap.ui.define([
 						"template": "Storage Type"
 					}, {
 						"label": "{i18n>lblDescription}",
-						"template": "Storage Bin"
+						"template": "Description"
 					}]
 				},
 

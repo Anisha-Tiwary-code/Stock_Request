@@ -380,7 +380,7 @@ sap.ui.define([
 
                 //Key and value property texts are set from BaseController createColumnModel "cols" for destStorageType
                 this.getOwnerComponent().getModel("VHKeyModel").setProperty("/key", "Storage Type");
-                this.getOwnerComponent().getModel("VHKeyModel").setProperty("/descriptionKey", "Storage Bin");
+                this.getOwnerComponent().getModel("VHKeyModel").setProperty("/descriptionKey", "Description");
                 var columns = this.getOwnerComponent().getModel("ColumnModel").getObject("/destStorageType");//Defined in createColumnModel method in models.js
                 var data = this.getOwnerComponent().getModel("CommonValueHelpModel").getObject("/DestStorageType");
                 var entityset = "DestinationStorageType";
@@ -389,20 +389,13 @@ sap.ui.define([
             },
 
             //Method to set Destination storage Bin after user chooses destination storage type
-            //01-04-2024
+            //01-04-2024 - DEPRECATED: This method was causing incorrect auto-population
+            //Removed to prevent description from auto-populating in storage bin field
 
             onSubmitDestStorageType: function (destStorageBin) {
-                var locHeaderModel = this.getOwnerComponent().getModel("locHeaderModel");
-                var headerData = locHeaderModel.getData();
-
-                const lastIndex = destStorageBin.lastIndexOf(" (");
-
-                var storageBin = destStorageBin.slice(0, lastIndex);
-
-                headerData.destStorageBin = storageBin;
-
-                locHeaderModel.refresh();
-
+                // This method is no longer used to prevent incorrect auto-population
+                // Users should manually select storage bin from value help
+                console.log("onSubmitDestStorageType called but auto-population disabled to prevent data mapping issues");
             },
 
             //Method called on F4 Value Help for Destination Storage Bin field

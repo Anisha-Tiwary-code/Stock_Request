@@ -130,10 +130,11 @@ sap.ui.define([
 				this.onCostCenterEnter();
 			}
 
-			//01-04-2024 - if user chooses destination storage type from value help, this method is called
-			//to set destination storage bin 
+			//01-04-2024 - if user chooses destination storage type from value help
+			//Note: Removed auto-population of storage bin to prevent incorrect data mapping
 			if (oEvent.getSource().getKey() === "Storage Type") {
-				this.onSubmitDestStorageType(aTokens[0].getText());
+				// Only set the storage type value, do not auto-populate storage bin
+				// this.onSubmitDestStorageType(aTokens[0].getText());
 			}
 
 			//if user chooses storage bin from value help, this method is called
@@ -261,10 +262,8 @@ sap.ui.define([
 				var destStorageTypes = [];
 				oDataResult.forEach(function (obj) {
 					var nItem = {
-						// "Storage Type": obj.Lgtyp,
-						// "Storage Bin":obj.Ltypt
 						"Storage Type": obj.LGTYP,
-						"Storage Bin":obj.LTYPT
+						"Description": obj.LTYPT
 						
 					};
 					destStorageTypes.push(nItem);
