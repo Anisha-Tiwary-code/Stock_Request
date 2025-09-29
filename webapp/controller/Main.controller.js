@@ -418,7 +418,7 @@ sap.ui.define([
                 //Validate that both warehouse number and storage type are present
                 if (!warehouseNumber || warehouseNumber.trim().length === 0 || 
                     !destStorageType || destStorageType.trim().length === 0) {
-                    MessageBox.error("Please fill the Warehouse Number and Destination Storage Type");
+                    MessageBox.error(oRes.getText("msgFillWarehouseAndStorageType"));
                     return;
                 }
 
