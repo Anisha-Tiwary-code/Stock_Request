@@ -278,9 +278,9 @@ sap.ui.define([
 				var storageBins = [];
 				oDataResult.forEach(function (obj) {
 					var nItem = {
-						"Storage Type": obj.LGTYP,
-						"Storage Bin": obj.LGPLA,
-						"Putaway Block": obj.SKZUE
+						"Storage Type": obj.Lgtyp,
+						"Storage Bin": obj.Lgpla,
+						"Putaway Block": obj.Skzue
 					};
 					storageBins.push(nItem);
 				});

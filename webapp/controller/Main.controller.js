@@ -406,7 +406,7 @@ sap.ui.define([
             },
 
             //Method called on F4 Value Help for Destination Storage Bin field
-            //Implemented to load data from ZOD_PE_SEARCHHELPS_SRV/StorageBinSHSet
+            //Implemented to load data from ZOD_PE_SEARCHHELPS_SRV/StorageBinSHSet by Anisha
 
             onVHDestStorageBin: function (oEvent) {
                 console.log("onVHDestStorageBin called");
@@ -419,6 +419,8 @@ sap.ui.define([
 
                 var warehouseNumber = headerData.warehouseNumber;
                 var destStorageType = headerData.destStorageType;
+                // var oQuote = "'";
+                // var destStorageTypeString = oQuote.concat(destStorageType, "'");
 
                 //Validate that both warehouse number and storage type are present
                 if (!warehouseNumber || warehouseNumber.trim().length === 0 || 
@@ -433,8 +435,8 @@ sap.ui.define([
                 //pass warehouse Number as filter (Lgnum)
                 aFilters.push(new sap.ui.model.Filter("Lgnum", sap.ui.model.FilterOperator.EQ, warehouseNumber.trim().toUpperCase()));
 
-                //pass destination storage type as filter (LGTYP)
-                aFilters.push(new sap.ui.model.Filter("LGTYP", sap.ui.model.FilterOperator.EQ, destStorageType.trim().toUpperCase()));
+                //pass destination storage type as filter (Lgtyp)
+                aFilters.push(new sap.ui.model.Filter("Lgtyp", sap.ui.model.FilterOperator.EQ, destStorageType.trim()));
 
                 mParameters.filters = aFilters;
 
@@ -442,8 +444,8 @@ sap.ui.define([
                 oModel.setUseBatch(false);
 
                 oModel.read("/StorageBinSHSet", {
-                    filters: mParameters.filters,
-                    sorters: mParameters.sorters,
+                    filters: mParameters ? mParameters.filters : "",
+                    sorters: !mParameters ? mParameters.sorters : "",
                     success: $.proxy(function (oRetrievedResult) {
                         console.log("StorageBinSHSet success:", oRetrievedResult);
                         sap.ui.core.BusyIndicator.hide();
