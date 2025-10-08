@@ -168,6 +168,24 @@ sap.ui.define([
 						"label": "{i18n>lblPutawayBlock}",
 						"template": "Putaway Block"
 					}]
+				},
+
+				//For Valuehelp of Batch with formatted quantity
+				"batch":{
+					"cols":[{
+						"label": "{i18n>lblBatch}",
+						"template": "Batch"
+					}, {
+						"label": "{i18n>lblMaterial}",
+						"template": "Material"
+					}, {
+						"label": "{i18n>lblQtyStillToBeIssued}",
+						"template": "Qty Still To Be Issued",
+						"formatter": "quantity"
+					}, {
+						"label": "{i18n>lblUoM}",
+						"template": "UoM"
+					}]
 				}
 			};
 			oColModel.setData(colItem);
@@ -186,7 +204,8 @@ sap.ui.define([
 				"WarehouseNumber": [],
 				"MovementType": [],
 				"DestStorageType":[],//01-04-2024 - For Destination Storage Type value help
-				"StorageBin":[]//For Destination Storage Bin value help
+				"StorageBin":[],//For Destination Storage Bin value help
+				"Batch":[]//For Batch value help with formatted quantity
 				
 			};
 			oVHModel.setData(vhItem);

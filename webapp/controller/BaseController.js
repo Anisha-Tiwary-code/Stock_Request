@@ -95,15 +95,26 @@ sap.ui.define([
 						oTable.bindAggregation("rows", "/" + entityset);
 					}
 					if (oTable.bindItems) {
+						var that = this;
 						oTable.bindAggregation("items", "/" + entityset, function () {
 							return new ColumnListItem({
 								cells: aCols.map(function (column) {
-									return new Label({
-										text: "{" + column.template + "}"
-									});
+									// Check if this column needs formatting (for quantity fields)
+									if (column.formatter === "quantity") {
+										return new Label({
+											text: {
+												path: column.template,
+												formatter: that.formatQuantityWithSeparator.bind(that)
+											}
+										});
+									} else {
+										return new Label({
+											text: "{" + column.template + "}"
+										});
+									}
 								})
 							});
-						});
+						}.bind(this));
 					}
 					this._oValueHelpDialog.update();
 				}.bind(this));
@@ -287,6 +298,22 @@ sap.ui.define([
 				CommonValueHelpModel.refresh();
 				break;
 
+			// Batch value help with formatted quantity
+			case "/BatchSHSet":
+				var batches = [];
+				oDataResult.forEach(function (obj) {
+					var nItem = {
+						"Batch": obj.Charg,
+						"Material": obj.Matnr,
+						"Qty Still To Be Issued": obj.Clabs,
+						"UoM": obj.Meins
+					};
+					batches.push(nItem);
+				});
+				CommonValueHelpModel.setProperty(sColumnSet, batches);
+				CommonValueHelpModel.refresh();
+				break;
+
            	case "/PlantSHSet":
                var plantData = [];
                oDataResult.forEach(function (obj) {
@@ -319,6 +346,26 @@ sap.ui.define([
                this.getView().addDependent(this._oDialog);
                this._oDialog.open();
            }.bind(this));
+       },
+
+       /*	Method: formatQuantityWithSeparator
+        *	Created By: IBM Fiori Team      	|Created On: Oct 2024
+        *	Last updated: IBM Fiori Team      	|Updated On: 
+        *	Description/Usage: Format quantity numbers with thousand separator (comma)
+        **/
+       formatQuantityWithSeparator: function (value) {
+           if (!value || value === "" || isNaN(value)) {
+               return value;
+           }
+           
+           // Convert to number and format with thousand separator
+           var numberValue = parseFloat(value);
+           var formattedValue = numberValue.toLocaleString('en-US', {
+               minimumFractionDigits: 0,
+               maximumFractionDigits: 3
+           });
+           
+           return formattedValue;
        }
    });
 });
